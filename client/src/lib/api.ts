@@ -5,7 +5,7 @@ const client = hc<ApiRoutes>('/')
 
 export const api = client.api
 
-export async function getAllExpenses() {
+export async function getExpenses() {
   const res = await api.expenses.$get()
 
   if (!res.ok) {
