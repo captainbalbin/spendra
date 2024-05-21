@@ -1,6 +1,11 @@
-import { Button } from './components/ui/button'
+import { createFileRoute } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
+
+export const Route = createFileRoute('/')({
+  component: Index,
+})
 
 async function getTotalExpenses() {
   const res = await api.expenses['total'].$get()
@@ -16,7 +21,7 @@ async function getTotalExpenses() {
   return data
 }
 
-function App() {
+function Index() {
   const { isPending, error, data, refetch } = useQuery({
     queryKey: ['get-total-expenses'],
     queryFn: getTotalExpenses,
@@ -26,10 +31,8 @@ function App() {
 
   return (
     <div className="bg-background h-screen">
-      <p className="text-foreground">{data?.message}</p>
+      <p className="text-foreground">{isPending ? 'Loading...' : data?.message}</p>
       <Button onClick={() => refetch()}>Refetch data</Button>
     </div>
   )
 }
-
-export default App
