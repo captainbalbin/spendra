@@ -21,26 +21,44 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useRef } from 'react'
-
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-})
+import { useQueryClient } from '@tanstack/react-query'
+import { createExpense, expensesQueryOptions } from '@/lib/api'
+import type { CreateExpense } from '@server/routes/expenses'
 
 export const ExpenseDialog = () => {
   const closeRef = useRef<HTMLButtonElement | null>(null)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const queryClient = useQueryClient()
+
+  const form = useForm<CreateExpense>({
+    resolver: zodResolver(
+      z.object({
+        title: z.string(),
+        amount: z.number(),
+      })
+    ),
     defaultValues: {
-      username: '',
+      title: '',
+      amount: 0,
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(value: CreateExpense) {
     if (form.formState.isValid) {
+      const existingExpenses = await queryClient.ensureQueryData(expensesQueryOptions)
+      console.log(existingExpenses)
+
+      try {
+        const newExpense = await createExpense({ value })
+
+        console.log(newExpense)
+      } catch (error) {
+        console.error(error)
+      }
+
       closeRef?.current?.click()
     }
-    console.log(values)
+    console.log(value)
   }
 
   return (
@@ -60,12 +78,25 @@ export const ExpenseDialog = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="username"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input {...field} autoComplete="off" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} autoComplete="off" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
