@@ -7,8 +7,11 @@ export const Route = createRootRoute({
 function Nav() {
   return (
     <div className="p-2 flex gap-4">
-      <Link to="/" className="font-bold">
-        Spendra
+      <Link to="/" className="active:font-bold">
+        Dashboard
+      </Link>
+      <Link to="/expenses" className="active:font-bold">
+        Expenses
       </Link>
       <Link to="/profile" className="active:font-bold">
         Profile
