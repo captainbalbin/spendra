@@ -13,7 +13,7 @@ import type { Expense } from '@server/routes/expenses'
 import { ExpenseDialog } from '@/containers/expenseDialog'
 
 export const Route = createFileRoute('/expenses')({
-  component: Index,
+  component: Expenses,
 })
 
 async function getExpenses() {
@@ -38,7 +38,7 @@ function generatreRows(expenses: Expense[]) {
   ))
 }
 
-function Index() {
+function Expenses() {
   const { isPending, error, data } = useQuery({
     queryKey: ['get-expenses'],
     queryFn: getExpenses,
