@@ -3,9 +3,9 @@ import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 
 const expenseSchema = z.object({
-  id: z.number().int().positive().min(1),
-  title: z.string().min(3).max(100),
-  amount: z.number().int().positive(),
+  id: z.number().int().positive().min(1).optional(),
+  title: z.string().min(3).max(100).optional(),
+  amount: z.number().int().positive().optional(),
 })
 
 export type Expense = z.infer<typeof expenseSchema>
@@ -23,24 +23,26 @@ const expenses: Expense[] = [
 ]
 
 export const expensesRoute = new Hono()
-  .get('/', (c) => {
-    return c.json({ expenses })
+  .get('/', (context) => {
+    return context.json({ expenses })
   })
-  .post('/', (c) => {
-    const expense = c.body
+  .post('/', zValidator('json', createExpenseSchema), (context) => {
+    const expense = context.req.valid('json')
 
-    return c.json({ message: 'Created an expense:', expense })
-  })
-  .get('/total', (c) => {
-    return c.json({ message: 'Total expenses' })
-  })
-  .get('/:id{[0-9]+}', async (c: any) => {
-    const id = Number.parseInt(c.req.param('id'))
+    expenses.push({ ...expense, id: expenses.length + 1 })
 
-    return c.json({ message: `Expense with id ${id}` })
+    return context.json(expense)
   })
-  .delete('/:id{[0-9]+}', async (c: any) => {
-    const id = Number.parseInt(c.req.param('id'))
+  .get('/total', (context) => {
+    return context.json({ message: 'Total expenses' })
+  })
+  .get('/:id{[0-9]+}', async (context: any) => {
+    const id = Number.parseInt(context.req.param('id'))
 
-    return c.json({ message: `Deleted expense with id ${id}` })
+    return context.json({ message: `Expense with id ${id}` })
+  })
+  .delete('/:id{[0-9]+}', async (context: any) => {
+    const id = Number.parseInt(context.req.param('id'))
+
+    return context.json({ message: `Deleted expense with id ${id}` })
   })

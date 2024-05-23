@@ -28,7 +28,7 @@ async function getExpenses() {
   return data
 }
 
-function generatreRows(expenses: Expense[]) {
+function generatreRows(expenses: Expense[] | undefined) {
   return expenses?.map((expense) => (
     <TableRow key={expense.id}>
       <TableCell className="font-medium">{expense.id}</TableCell>

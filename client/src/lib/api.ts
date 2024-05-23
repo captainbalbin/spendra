@@ -11,7 +11,7 @@ export async function getExpenses() {
   const res = await api.expenses.$get()
 
   if (!res.ok) {
-    throw new Error('Failed to fetch total expenses')
+    throw new Error('Failed to fetch expenses')
   }
 
   const data = await res.json()
