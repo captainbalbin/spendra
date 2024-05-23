@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useMutationState, useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import {
   Table,
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table'
 import type { Expense } from '@server/routes/expenses'
 import { ExpenseDialog } from '@/containers/expenseDialog'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/expenses')({
   component: Expenses,
@@ -28,9 +29,9 @@ async function getExpenses() {
   return data
 }
 
-function generatreRows(expenses: Expense[] | undefined) {
+function generateRows(expenses: Expense[] | undefined) {
   return expenses?.map((expense) => (
-    <TableRow key={expense.id}>
+    <TableRow key={`${expense.id}-${expense.title}`}>
       <TableCell className="font-medium">{expense.id}</TableCell>
       <TableCell>{expense.title}</TableCell>
       <TableCell className="text-right">{expense.amount}</TableCell>
@@ -43,6 +44,14 @@ function Expenses() {
     queryKey: ['get-expenses'],
     queryFn: getExpenses,
   })
+
+  const variables = useMutationState({
+    filters: { mutationKey: ['create-expense'], status: 'pending' },
+  })
+
+  if (error) {
+    return <div>{error.message}</div>
+  }
 
   return (
     <>
@@ -59,7 +68,50 @@ function Expenses() {
                 <TableHead className="text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>{generatreRows(data?.expenses)}</TableBody>
+            <TableBody>
+              {variables?.[0]?.status === 'pending' && (
+                <TableRow>
+                  <TableCell className="font-medium">
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <Skeleton className="h-4" />
+                  </TableCell>
+                </TableRow>
+              )}
+              {isPending
+                ? Array(3)
+                    .fill(0)
+                    .map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="font-medium">
+                          <Skeleton className="h-4" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4" />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                : generateRows(data?.expenses)}
+            </TableBody>
           </Table>
         </div>
       </div>

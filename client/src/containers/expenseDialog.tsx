@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRef } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createExpense, expensesQueryOptions } from '@/lib/api'
 import { createExpenseSchema } from '@server/routes/expenses'
 import { useForm } from '@tanstack/react-form'
@@ -20,22 +20,13 @@ import { Label } from '@/components/ui/label'
 export const ExpenseDialog = () => {
   const closeRef = useRef<HTMLButtonElement | null>(null)
 
-  const queryClient = useQueryClient()
-  const form = useForm({
-    validatorAdapter: zodValidator,
-    defaultValues: {
-      title: '',
-      amount: 0,
-    },
-    onSubmit: async ({ value }) => {
+  const { mutate } = useMutation({
+    mutationFn: createExpense,
+    onMutate: async ({ value }) => {
       const existingExpenses = await queryClient.ensureQueryData(expensesQueryOptions)
-
-      console.log('existingExpenses', existingExpenses)
 
       try {
         const newExpense = await createExpense({ value })
-
-        console.log('newExpense', newExpense)
 
         queryClient.setQueryData(expensesQueryOptions.queryKey, {
           ...existingExpenses,
@@ -44,7 +35,22 @@ export const ExpenseDialog = () => {
       } catch (error) {
         console.error(error)
       }
+      closeRef.current?.click()
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: expensesQueryOptions.queryKey })
+    },
+    mutationKey: ['create-expense'],
+  })
+
+  const queryClient = useQueryClient()
+  const form = useForm({
+    validatorAdapter: zodValidator,
+    defaultValues: {
+      title: '',
+      amount: 0,
+    },
+    onSubmit: mutate,
   })
 
   return (

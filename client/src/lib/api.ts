@@ -26,8 +26,6 @@ export const expensesQueryOptions = queryOptions({
 })
 
 export async function createExpense({ value }: { value: CreateExpense }) {
-  await new Promise((resolve) => setTimeout(resolve, 3000))
-
   const res = await api.expenses.$post({ json: value })
 
   if (!res.ok) {
