@@ -22,20 +22,19 @@ export const ExpenseDialog = () => {
 
   const { mutate } = useMutation({
     mutationFn: createExpense,
-    onMutate: async ({ value }) => {
-      const existingExpenses = await queryClient.ensureQueryData(expensesQueryOptions)
-
+    onSuccess: (newExpense) => {
       try {
-        const newExpense = await createExpense({ value })
+        const existingExpenses = queryClient.getQueryData(expensesQueryOptions.queryKey)
 
         queryClient.setQueryData(expensesQueryOptions.queryKey, {
-          ...existingExpenses,
-          expenses: [newExpense, ...existingExpenses.expenses],
+          ...(existingExpenses ?? {}),
+          expenses: [newExpense, ...(existingExpenses?.expenses ?? [])],
         })
+
+        closeRef.current?.click()
       } catch (error) {
         console.error(error)
       }
-      closeRef.current?.click()
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: expensesQueryOptions.queryKey })
@@ -77,7 +76,7 @@ export const ExpenseDialog = () => {
           <form.Field
             name="title"
             validators={{
-              onChange: createExpenseSchema.shape.title,
+              onSubmit: createExpenseSchema.shape.title,
             }}
             children={(field) => (
               <div>
@@ -100,7 +99,7 @@ export const ExpenseDialog = () => {
           <form.Field
             name="amount"
             validators={{
-              onChange: createExpenseSchema.shape.amount,
+              onSubmit: createExpenseSchema.shape.amount,
             }}
             children={(field) => (
               <div>
