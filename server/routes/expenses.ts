@@ -24,7 +24,7 @@ const expenses: Expense[] = [
 ]
 
 export const expensesRoute = new Hono()
-  .use(getUser)
+  // .use(getUser)
   .get('/', (context) => {
     return context.json({ expenses })
   })
