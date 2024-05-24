@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
+import { getUser } from '../kinde'
 
 const expenseSchema = z.object({
   id: z.number().int().positive().min(1).optional(),
@@ -23,6 +24,7 @@ const expenses: Expense[] = [
 ]
 
 export const expensesRoute = new Hono()
+  .use(getUser)
   .get('/', (context) => {
     return context.json({ expenses })
   })

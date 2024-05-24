@@ -13,7 +13,7 @@ import type { Expense } from '@server/routes/expenses'
 import { ExpenseDialog } from '@/containers/expenseDialog'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export const Route = createFileRoute('/expenses')({
+export const Route = createFileRoute('/_authenticated/expenses')({
   component: Expenses,
 })
 
