@@ -1,48 +1,82 @@
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
-import { z } from 'zod'
-
-const expenseSchema = z.object({
-  id: z.number().int().positive().min(1).optional(),
-  title: z.string().min(3).max(100).optional(),
-  amount: z.number().int().positive().optional(),
-})
-
-export type Expense = z.infer<typeof expenseSchema>
-
-export const createExpenseSchema = expenseSchema.omit({
-  id: true,
-})
-
-export type CreateExpense = z.infer<typeof createExpenseSchema>
-
-const expenses: Expense[] = [
-  { id: 1, title: 'Groceries', amount: 50 },
-  { id: 2, title: 'Utilities', amount: 100 },
-  { id: 3, title: 'Rent', amount: 1000 },
-]
+import { getUser } from '../kinde'
+import { db } from '../db'
+import { expenses as expenseTable, insertExpensesSchema } from '../db/schema/expenses'
+import { eq, desc, sum, and } from 'drizzle-orm'
+import { createExpenseSchema } from '../sharedTypes'
 
 export const expensesRoute = new Hono()
-  .get('/', (context: any) => {
-    return context.json({ expenses })
-  })
-  .post('/', zValidator('json', createExpenseSchema), (context: any) => {
-    const expense = context.req.valid('json')
+  .use(getUser)
+  .get('/', async (context) => {
+    const user = context.var.user
 
-    expenses.push({ ...expense, id: expenses.length + 1 })
+    const expenses = await db
+      .select()
+      .from(expenseTable)
+      .where(eq(expenseTable.userId, user.id))
+      .orderBy(desc(expenseTable.createdAt))
+      .limit(100)
 
-    return context.json(expense)
+    return context.json({ expenses: expenses })
   })
-  .get('/total', (context: any) => {
-    return context.json({ message: 'Total expenses' })
+  .post('/', zValidator('json', createExpenseSchema), async (context) => {
+    const expense = await context.req.valid('json')
+    const user = context.var.user
+
+    const validatedExpense = insertExpensesSchema.parse({
+      ...expense,
+      userId: user.id,
+    })
+
+    const result = await db
+      .insert(expenseTable)
+      .values(validatedExpense)
+      .returning()
+      .then((res) => res[0])
+
+    context.status(201)
+    return context.json(result)
   })
-  .get('/:id{[0-9]+}', async (context: any) => {
+  .get('/total', async (context) => {
+    const user = context.var.user
+    const result = await db
+      .select({ total: sum(expenseTable.amount) })
+      .from(expenseTable)
+      .where(eq(expenseTable.userId, user.id))
+      .limit(1)
+      .then((res) => res[0])
+    return context.json(result)
+  })
+  .get('/:id{[0-9]+}', async (context) => {
     const id = Number.parseInt(context.req.param('id'))
+    const user = context.var.user
 
-    return context.json({ message: `Expense with id ${id}` })
+    const expense = await db
+      .select()
+      .from(expenseTable)
+      .where(and(eq(expenseTable.userId, user.id), eq(expenseTable.id, id)))
+      .then((res) => res[0])
+
+    if (!expense) {
+      return context.notFound()
+    }
+
+    return context.json({ expense })
   })
-  .delete('/:id{[0-9]+}', async (context: any) => {
+  .delete('/:id{[0-9]+}', async (context) => {
     const id = Number.parseInt(context.req.param('id'))
+    const user = context.var.user
 
-    return context.json({ message: `Deleted expense with id ${id}` })
+    const expense = await db
+      .delete(expenseTable)
+      .where(and(eq(expenseTable.userId, user.id), eq(expenseTable.id, id)))
+      .returning()
+      .then((res) => res[0])
+
+    if (!expense) {
+      return context.notFound()
+    }
+
+    return context.json({ expense: expense })
   })

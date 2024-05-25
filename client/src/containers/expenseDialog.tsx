@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { useRef } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createExpense, expensesQueryOptions } from '@/lib/api'
-import { createExpenseSchema } from '@server/routes/expenses'
+import { createExpenseSchema } from '@server/sharedTypes'
 import { useForm } from '@tanstack/react-form'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { Label } from '@/components/ui/label'
@@ -47,7 +47,8 @@ export const ExpenseDialog = () => {
     validatorAdapter: zodValidator,
     defaultValues: {
       title: '',
-      amount: 0,
+      amount: '0',
+      date: new Date().toISOString(), // TODO: Add date picker
     },
     onSubmit: mutate,
   })
@@ -110,7 +111,7 @@ export const ExpenseDialog = () => {
                   value={field.state.value ?? 0}
                   onBlur={field.handleBlur}
                   type="number"
-                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   autoComplete="off"
                 />
                 {field.state.meta.touchedErrors ? <em>{field.state.meta.touchedErrors}</em> : null}

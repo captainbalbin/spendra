@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { Expense } from '@server/routes/expenses'
 import { ExpenseDialog } from '@/containers/expenseDialog'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -27,16 +26,6 @@ async function getExpenses() {
   const data = await res.json()
 
   return data
-}
-
-function generateRows(expenses: Expense[] | undefined) {
-  return expenses?.map((expense) => (
-    <TableRow key={`${expense.id}-${expense.title}`}>
-      <TableCell className="font-medium">{expense.id}</TableCell>
-      <TableCell>{expense.title}</TableCell>
-      <TableCell className="text-right">{expense.amount}</TableCell>
-    </TableRow>
-  ))
 }
 
 function Expenses() {
@@ -110,7 +99,13 @@ function Expenses() {
                         </TableCell>
                       </TableRow>
                     ))
-                : generateRows(data?.expenses)}
+                : data?.expenses?.map((expense) => (
+                    <TableRow key={`${expense.id}-${expense.title}`}>
+                      <TableCell className="font-medium">{expense.id}</TableCell>
+                      <TableCell>{expense.title}</TableCell>
+                      <TableCell className="text-right">{expense.amount}</TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </div>
