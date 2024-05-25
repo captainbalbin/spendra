@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button'
 
 const Login = () => {
   return (
-    <div className="flex flex-col gap-y-2 items-center">
-      <p>Login to continue</p>
-      <Button asChild>
-        <a href="/api/login">Login</a>
-      </Button>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col gap-16 items-center justify-center min-w-96">
+        <h1 className="text-2xl font-bold">Spendra</h1>
+        <Button asChild className="w-full">
+          <a href="/api/login">Login</a>
+        </Button>
+      </div>
     </div>
   )
 }
