@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "bun server/index.ts",
-    "dev": "bun --watch server/index.ts --open"
+    "dev": "bun --watch server/index.ts --open",
+    "migrate": "bun drizzle-kit generate && bun run ./server/db/migrate.ts"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "latest",
@@ -16,6 +17,8 @@
   "dependencies": {
     "@hono/zod-validator": "^0.2.1",
     "@kinde-oss/kinde-typescript-sdk": "^2.9.1",
+    "drizzle-orm": "^0.29.4",
+    "drizzle-zod": "^0.5.1",
     "hono": "^4.3.8",
     "zod": "^3.23.8"
   }
