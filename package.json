@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "start": "bun server/index.ts",
-    "dev": "bun server/index.ts --watch"
+    "dev": "bun --watch server/index.ts --open"
   },
   "devDependencies": {
-    "@flydotio/dockerfile": "^0.5.7",
+    "@flydotio/dockerfile": "latest",
     "@types/bun": "latest"
   },
   "peerDependencies": {

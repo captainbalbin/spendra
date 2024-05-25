@@ -1,7 +1,6 @@
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
-import { getUser } from '../kinde'
 
 const expenseSchema = z.object({
   id: z.number().int().positive().min(1).optional(),
@@ -24,18 +23,17 @@ const expenses: Expense[] = [
 ]
 
 export const expensesRoute = new Hono()
-  // .use(getUser)
-  .get('/', (context) => {
+  .get('/', (context: any) => {
     return context.json({ expenses })
   })
-  .post('/', zValidator('json', createExpenseSchema), (context) => {
+  .post('/', zValidator('json', createExpenseSchema), (context: any) => {
     const expense = context.req.valid('json')
 
     expenses.push({ ...expense, id: expenses.length + 1 })
 
     return context.json(expense)
   })
-  .get('/total', (context) => {
+  .get('/total', (context: any) => {
     return context.json({ message: 'Total expenses' })
   })
   .get('/:id{[0-9]+}', async (context: any) => {
