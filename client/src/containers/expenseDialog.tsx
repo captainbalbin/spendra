@@ -176,9 +176,20 @@ export const ExpenseDialog = () => {
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <Button className="mt-4" type="submit" disabled={!canSubmit}>
-                {isSubmitting ? '...' : 'Submit'}
-              </Button>
+              <div className="flex gap-x-2 justify-end">
+                <Button
+                  className="mt-4"
+                  type="button"
+                  disabled={isSubmitting}
+                  variant={'secondary'}
+                  size={'sm'}
+                >
+                  Cancel
+                </Button>
+                <Button className="mt-4" type="submit" size={'sm'} disabled={!canSubmit}>
+                  {isSubmitting ? '...' : 'Create'}
+                </Button>
+              </div>
             )}
           />
         </form>
