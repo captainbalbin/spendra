@@ -16,6 +16,11 @@ import { createExpenseSchema } from '@server/sharedTypes'
 import { useForm } from '@tanstack/react-form'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { Label } from '@/components/ui/label'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export const ExpenseDialog = () => {
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -25,6 +30,8 @@ export const ExpenseDialog = () => {
     onSuccess: (newExpense) => {
       try {
         const existingExpenses = queryClient.getQueryData(expensesQueryOptions.queryKey)
+
+        console.log(newExpense)
 
         queryClient.setQueryData(expensesQueryOptions.queryKey, {
           ...(existingExpenses ?? {}),
@@ -90,9 +97,9 @@ export const ExpenseDialog = () => {
                   onChange={(e) => field.handleChange(e.target.value)}
                   autoComplete="off"
                 />
-                <Label>Test</Label>
+
                 {field.state.meta.touchedErrors ? (
-                  <pre>{field.state.meta.touchedErrors}</pre>
+                  <Label className="text-red-500">{field.state.meta.touchedErrors}</Label>
                 ) : null}
               </div>
             )}
@@ -113,7 +120,55 @@ export const ExpenseDialog = () => {
                   type="number"
                   onChange={(e) => field.handleChange(e.target.value)}
                   autoComplete="off"
+                  className="w-full" // Set the size of the input here
                 />
+                {field.state.meta.touchedErrors ? (
+                  <Label className="text-red-500">{field.state.meta.touchedErrors}</Label>
+                ) : null}
+              </div>
+            )}
+          />
+
+          <form.Field
+            name="date"
+            validators={{
+              onSubmit: createExpenseSchema.shape.date,
+            }}
+            children={(field) => (
+              <div className="flex flex-col">
+                <Label htmlFor={field.name} className="mb-1">
+                  Date
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={cn(
+                        'w-[280px] justify-start text-left font-normal',
+                        !field.state.value && 'text-muted-foreground'
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {field.state.value ? (
+                        format(field.state.value, 'PPP')
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={new Date(field.state.value)}
+                      onSelect={(date) => {
+                        console.log(date)
+                        return field.handleChange((date ?? new Date()).toISOString())
+                      }}
+                      className="rounded-md border"
+                      weekStartsOn={1}
+                    />
+                  </PopoverContent>
+                </Popover>
                 {field.state.meta.touchedErrors ? <em>{field.state.meta.touchedErrors}</em> : null}
               </div>
             )}
