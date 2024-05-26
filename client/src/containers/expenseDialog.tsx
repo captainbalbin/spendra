@@ -21,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import dayjs from 'dayjs'
 
 export const ExpenseDialog = () => {
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -55,7 +56,7 @@ export const ExpenseDialog = () => {
     defaultValues: {
       title: '',
       amount: '0',
-      date: new Date().toISOString(), // TODO: Add date picker
+      date: dayjs().toISOString(),
     },
     onSubmit: mutate,
   })
@@ -128,7 +129,6 @@ export const ExpenseDialog = () => {
               </div>
             )}
           />
-
           <form.Field
             name="date"
             validators={{
@@ -161,8 +161,7 @@ export const ExpenseDialog = () => {
                       mode="single"
                       selected={new Date(field.state.value)}
                       onSelect={(date) => {
-                        console.log(date)
-                        return field.handleChange((date ?? new Date()).toISOString())
+                        field.handleChange(dayjs(date).format('YYYY-MM-DD'))
                       }}
                       className="rounded-md border"
                       weekStartsOn={1}
