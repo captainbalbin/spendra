@@ -55,26 +55,19 @@ function Expenses() {
                 <TableHead className="w-[100px]">Id</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
+                <TableHead>Date added</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {variables?.[0]?.status === 'pending' && (
                 <TableRow>
-                  <TableCell className="font-medium">
-                    <Skeleton className="h-4" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4" />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <Skeleton className="h-4" />
-                  </TableCell>
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <TableCell key={i}>
+                        <Skeleton className="h-4" />
+                      </TableCell>
+                    ))}
                 </TableRow>
               )}
               {isPending
@@ -82,21 +75,13 @@ function Expenses() {
                     .fill(0)
                     .map((_, i) => (
                       <TableRow key={i}>
-                        <TableCell className="font-medium">
-                          <Skeleton className="h-4" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4" />
-                        </TableCell>
+                        {Array(5)
+                          .fill(0)
+                          .map((_, j) => (
+                            <TableCell key={j} className="font-medium">
+                              <Skeleton className="h-4" />
+                            </TableCell>
+                          ))}
                       </TableRow>
                     ))
                 : data?.expenses?.map((expense) => (
@@ -104,6 +89,7 @@ function Expenses() {
                       <TableCell className="font-medium">{expense.id}</TableCell>
                       <TableCell>{expense.title}</TableCell>
                       <TableCell className="text-right">{expense.amount}</TableCell>
+                      <TableCell>{expense.date?.split('T')[0]}</TableCell>
                     </TableRow>
                   ))}
             </TableBody>
