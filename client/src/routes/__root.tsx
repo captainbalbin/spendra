@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner'
 import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Link, Outlet, useRouteContext } from '@tanstack/react-router'
 // import { Button } from '@/components/ui/button'
@@ -38,6 +39,7 @@ function Root() {
     <div className="min-h-screen">
       <Nav />
       <Outlet />
+      <Toaster />
     </div>
   )
 }

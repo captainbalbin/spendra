@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createExpense, expensesQueryOptions } from '@/lib/api'
 import { createExpenseSchema } from '@server/sharedTypes'
@@ -22,8 +22,11 @@ import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import dayjs from 'dayjs'
+import { Checkbox } from '@/components/ui/checkbox'
+import { toast } from 'sonner'
 
 export const ExpenseDialog = () => {
+  const [multiple, setMultiple] = useState(false)
   const closeRef = useRef<HTMLButtonElement | null>(null)
 
   const { mutate } = useMutation({
@@ -32,15 +35,20 @@ export const ExpenseDialog = () => {
       try {
         const existingExpenses = queryClient.getQueryData(expensesQueryOptions.queryKey)
 
-        console.log(newExpense)
-
         queryClient.setQueryData(expensesQueryOptions.queryKey, {
           ...(existingExpenses ?? {}),
           expenses: [newExpense, ...(existingExpenses?.expenses ?? [])],
         })
 
-        closeRef.current?.click()
+        if (!multiple) closeRef.current?.click()
+
+        form.reset()
+
+        toast('Expense created', {
+          description: `Added: ${newExpense.title}`,
+        })
       } catch (error) {
+        toast.error('Failed to create new expense')
         console.error(error)
       }
     },
@@ -55,7 +63,7 @@ export const ExpenseDialog = () => {
     validatorAdapter: zodValidator,
     defaultValues: {
       title: '',
-      amount: '0',
+      amount: '',
       date: dayjs().toISOString(),
     },
     onSubmit: mutate,
@@ -80,7 +88,7 @@ export const ExpenseDialog = () => {
             e.stopPropagation()
             void form.handleSubmit()
           }}
-          className="flex flex-col gap-y-4 max-w-xl m-auto"
+          className="flex flex-col gap-y-4 min-w-80 max-w-xl m-auto"
         >
           <form.Field
             name="title"
@@ -144,7 +152,7 @@ export const ExpenseDialog = () => {
                     <Button
                       variant={'outline'}
                       className={cn(
-                        'w-[280px] justify-start text-left font-normal',
+                        'w-full justify-start text-left font-normal',
                         !field.state.value && 'text-muted-foreground'
                       )}
                     >
@@ -176,17 +184,27 @@ export const ExpenseDialog = () => {
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <div className="flex gap-x-2 justify-end">
+              <div className="flex gap-x-2 justify-end items-center mt-4">
+                <div className="pr-4 flex flex-row justify-center items-center">
+                  <Checkbox
+                    id="multiple-expenses-checkbox"
+                    checked={multiple}
+                    onCheckedChange={() => setMultiple(!multiple)}
+                  />
+                  <Label htmlFor="multiple-expenses-checkbox" className="ml-2">
+                    Create more
+                  </Label>
+                </div>
                 <Button
-                  className="mt-4"
                   type="button"
                   disabled={isSubmitting}
                   variant={'secondary'}
                   size={'sm'}
+                  onClick={() => closeRef.current?.click()}
                 >
                   Cancel
                 </Button>
-                <Button className="mt-4" type="submit" size={'sm'} disabled={!canSubmit}>
+                <Button type="submit" size={'sm'} disabled={!canSubmit}>
                   {isSubmitting ? '...' : 'Create'}
                 </Button>
               </div>
