@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table'
 import { ExpenseDialog } from '@/containers/expenseDialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { TableOptionsButton } from '@/containers/tableOptions'
 
 export const Route = createFileRoute('/_authenticated/expenses')({
   component: Expenses,
@@ -90,6 +91,9 @@ function Expenses() {
                       <TableCell>{expense.title}</TableCell>
                       <TableCell className="text-right">{expense.amount}</TableCell>
                       <TableCell>{expense.date?.split('T')[0]}</TableCell>
+                      <TableCell className="text-right">
+                        <TableOptionsButton id={expense.id} />
+                      </TableCell>
                     </TableRow>
                   ))}
             </TableBody>
