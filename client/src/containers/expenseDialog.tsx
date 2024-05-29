@@ -121,7 +121,7 @@ export const ExpenseDialog = () => {
                   type="number"
                   onChange={(e) => field.handleChange(e.target.value)}
                   autoComplete="off"
-                  className="w-full" // Set the size of the input here
+                  className="w-full hide-ar"
                 />
                 {field.state.meta.touchedErrors ? (
                   <Label className="text-red-500">{field.state.meta.touchedErrors}</Label>
