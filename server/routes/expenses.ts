@@ -90,10 +90,6 @@ export const expensesRoute = new Hono()
       userId: user.id,
     })
 
-    console.log('id', id)
-    console.log('userId', user.id)
-    console.log('validatedExpense', validatedExpense)
-
     const result = await db
       .update(expenseTable)
       .set(validatedExpense)

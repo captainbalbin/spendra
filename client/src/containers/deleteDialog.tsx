@@ -5,7 +5,15 @@ import { deleteExpense, expensesQueryOptions } from '@/lib/api'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 
-export const DeleteDialog = ({ id }: { id: number }) => {
+export const DeleteDialog = ({
+  open,
+  onOpen,
+  id,
+}: {
+  open: boolean
+  onOpen: (open: boolean) => void
+  id: number
+}) => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
@@ -23,13 +31,13 @@ export const DeleteDialog = ({ id }: { id: number }) => {
   })
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Dialog open={open} onOpenChange={onOpen}>
+      {/* <DialogTrigger asChild>
         <div className="flex gap-2 items-center w-full">
           <Trash className="h-4 w-4" />
           Delete
         </div>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent>
         <h2>Delete expense</h2>
         <p>Are you sure you want to delete the expense with id {id}?</p>

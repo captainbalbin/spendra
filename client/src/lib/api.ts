@@ -72,9 +72,6 @@ export async function updateExpense({
 }): Promise<UpdateExpense> {
   const res = await api.expenses[':id{[0-9]+}'].$put({ param: { id: id.toString() }, json: value })
 
-  console.log('id', id)
-  console.log('res', res)
-
   if (!res.ok) {
     throw new Error('Failed to update expense ')
   }

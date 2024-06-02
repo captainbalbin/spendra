@@ -24,8 +24,17 @@ import { cn } from '@/lib/utils'
 import dayjs from 'dayjs'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 
-export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
+export const ExpenseDialog = ({
+  open,
+  onOpen,
+  expense,
+}: {
+  open?: boolean
+  onOpen?: (open: boolean) => void
+  expense?: UpdateExpense
+}) => {
   const [multiple, setMultiple] = useState(false)
   const closeRef = useRef<HTMLButtonElement | null>(null)
 
@@ -70,8 +79,11 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
 
         queryClient.setQueryData(['get-expenses', newExpense.id], newExpense)
 
+        toast('Expense updated')
+
         return { existingExpense, newExpense }
       } catch (error) {
+        toast.error('Failed to update new expense')
         console.error(error)
       }
     },
@@ -90,7 +102,6 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
       date: expense?.date ?? dayjs().toISOString(),
     },
     onSubmit: (value) => {
-      console.log('onsubmit triggered')
       if (expense) {
         updateMutation.mutate({ ...value, id: Number(expense.id) })
       } else {
@@ -100,17 +111,12 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
   })
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {expense ? (
-          <div className="flex gap-2 items-center w-full">
-            <Pencil className="h-4 w-4" />
-            Edit
-          </div>
-        ) : (
+    <Dialog open={open} onOpenChange={onOpen}>
+      {!expense && (
+        <DialogTrigger asChild>
           <Button>New Expense</Button>
-        )}
-      </DialogTrigger>
+        </DialogTrigger>
+      )}
       <DialogContent
         onEscapeKeyDown={(e) => (form.state.isDirty ? e.preventDefault() : null)}
         onInteractOutside={(e) => (form.state.isDirty ? e.preventDefault() : null)}
@@ -141,10 +147,7 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
                   name={field.name}
                   value={field.state.value ?? ''}
                   onBlur={field.handleBlur}
-                  onChange={(e) => {
-                    console.log(e.target.value)
-                    return field.handleChange(e.target.value)
-                  }}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   autoComplete="off"
                 />
 
@@ -247,8 +250,15 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" size={'sm'} disabled={!canSubmit}>
-                  {isSubmitting ? '...' : expense ? 'Update' : 'Create'}
+                <Button
+                  type="submit"
+                  size={'sm'}
+                  disabled={!canSubmit || createMutation.isPending || updateMutation.isPending}
+                >
+                  {(createMutation.isPending || updateMutation.isPending) && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  {expense ? 'Update' : 'Create'}
                 </Button>
               </div>
             )}
