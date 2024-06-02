@@ -26,4 +26,5 @@ export const insertExpensesSchema = createInsertSchema(expenses, {
     .regex(/^\d+(\.\d{2})?$/)
     .refine((value) => parseFloat(value) >= 0.01, 'Amount must be greater than or equal to 0.01'),
 })
+
 export const selectExpensesSchema = createSelectSchema(expenses)

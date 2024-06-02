@@ -1,7 +1,7 @@
 import { hc } from 'hono/client'
 import type { ApiRoutes } from '@server/app'
 import { queryOptions } from '@tanstack/react-query'
-import type { CreateExpense } from '@server/sharedTypes'
+import type { CreateExpense, Expense, UpdateExpense } from '@server/sharedTypes'
 
 const client = hc<ApiRoutes>('/')
 
@@ -61,4 +61,37 @@ export const deleteExpense = async ({ id }: { id: number }) => {
   if (!res.ok) {
     throw new Error('Failed to delete expense')
   }
+}
+
+export async function updateExpense({
+  id,
+  value,
+}: {
+  id: number
+  value: UpdateExpense
+}): Promise<UpdateExpense> {
+  const res = await api.expenses[':id{[0-9]+}'].$put({ param: { id: id.toString() }, json: value })
+
+  console.log('id', id)
+  console.log('res', res)
+
+  if (!res.ok) {
+    throw new Error('Failed to update expense ')
+  }
+
+  const updatedExpense = await res.json()
+
+  return updatedExpense as UpdateExpense
+}
+
+export async function getExpense({ id }: { id: number }): Promise<Expense> {
+  const res = await api.expenses[':id{[0-9]+}'].$get({ param: { id: id.toString() } })
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch expense')
+  }
+
+  const data = await res.json()
+
+  return data as Expense
 }

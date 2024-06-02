@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutationState, useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
+import { expensesQueryOptions, getExpenses } from '@/lib/api'
 import {
   Table,
   TableBody,
@@ -17,23 +17,8 @@ export const Route = createFileRoute('/_authenticated/expenses')({
   component: Expenses,
 })
 
-async function getExpenses() {
-  const res = await api.expenses.$get()
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch expenses')
-  }
-
-  const data = await res.json()
-
-  return data
-}
-
 function Expenses() {
-  const { isPending, error, data } = useQuery({
-    queryKey: ['get-expenses'],
-    queryFn: getExpenses,
-  })
+  const { isPending, error, data } = useQuery(expensesQueryOptions)
 
   const variables = useMutationState({
     filters: { mutationKey: ['create-expense'], status: 'pending' },
@@ -92,7 +77,7 @@ function Expenses() {
                       <TableCell className="text-right">{expense.amount}</TableCell>
                       <TableCell>{expense.date?.split('T')[0]}</TableCell>
                       <TableCell className="text-right">
-                        <TableOptionsButton id={expense.id} />
+                        <TableOptionsButton expense={expense} />
                       </TableCell>
                     </TableRow>
                   ))}

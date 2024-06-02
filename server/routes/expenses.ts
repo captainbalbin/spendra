@@ -4,7 +4,7 @@ import { getUser } from '../kinde'
 import { db } from '../db'
 import { expenses as expenseTable, insertExpensesSchema } from '../db/schema/expenses'
 import { eq, desc, sum, and } from 'drizzle-orm'
-import { createExpenseSchema } from '../sharedTypes'
+import { createExpenseSchema, updateExpenseSchema } from '../sharedTypes'
 
 export const expensesRoute = new Hono()
   .use(getUser)
@@ -21,7 +21,7 @@ export const expensesRoute = new Hono()
     return context.json({ expenses: expenses })
   })
   .post('/', zValidator('json', createExpenseSchema), async (context) => {
-    const expense = await context.req.valid('json')
+    const expense = context.req.valid('json')
     const user = context.var.user
 
     const validatedExpense = insertExpensesSchema.parse({
@@ -79,4 +79,31 @@ export const expensesRoute = new Hono()
     }
 
     return context.json({ expense: expense })
+  })
+  .put('/:id{[0-9]+}', zValidator('json', updateExpenseSchema), async (context) => {
+    const id = Number.parseInt(context.req.param('id'))
+    const expense = context.req.valid('json')
+    const user = context.var.user
+
+    const validatedExpense = insertExpensesSchema.parse({
+      ...expense,
+      userId: user.id,
+    })
+
+    console.log('id', id)
+    console.log('userId', user.id)
+    console.log('validatedExpense', validatedExpense)
+
+    const result = await db
+      .update(expenseTable)
+      .set(validatedExpense)
+      .where(and(eq(expenseTable.userId, user.id), eq(expenseTable.id, id)))
+      .returning()
+      .then((res) => res[0])
+
+    if (!result) {
+      return context.notFound()
+    }
+
+    return context.json({ expense: result })
   })
