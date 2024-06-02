@@ -99,8 +99,6 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
     },
   })
 
-  console.log('rerendering')
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -129,7 +127,7 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
           }}
           className="flex flex-col gap-y-4 min-w-80 max-w-xl m-auto"
         >
-          {/* <form.Field
+          <form.Field
             name="title"
             validators={{
               onChange: updateExpenseSchema.shape.title,
@@ -145,32 +143,6 @@ export const ExpenseDialog = ({ expense }: { expense?: UpdateExpense }) => {
                   onBlur={field.handleBlur}
                   onChange={(e) => {
                     console.log(e.target.value)
-                    return field.handleChange(e.target.value)
-                  }}
-                  autoComplete="off"
-                />
-
-                {field.state.meta.touchedErrors ? (
-                  <Label className="text-red-500">{field.state.meta.touchedErrors}</Label>
-                ) : null}
-              </div>
-            )}
-          /> */}
-          <form.Field
-            name="title"
-            validators={{
-              onSubmit: updateExpenseSchema.shape.title,
-            }}
-            children={(field) => (
-              <div>
-                <Label htmlFor={field.name}>Title</Label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value ?? ''}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => {
-                    e.preventDefault()
                     return field.handleChange(e.target.value)
                   }}
                   autoComplete="off"

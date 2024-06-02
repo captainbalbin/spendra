@@ -10,6 +10,7 @@ import { DeleteDialog } from './deleteDialog'
 import { ExpenseDialog } from './expenseDialog'
 import { UpdateExpense } from '@server/sharedTypes'
 
+// TODO: Fix that the dialogs are not inside the dropdown, since it seems to cause some weird rendering issues
 export const TableOptionsButton = ({ expense }: { expense: UpdateExpense }) => {
   return (
     <DropdownMenu>
