@@ -92,3 +92,21 @@ export async function getExpense({ id }: { id: number }): Promise<Expense> {
 
   return data as Expense
 }
+
+export const totalExpensesQueryOptions = queryOptions({
+  queryKey: ['get-total-expenses'],
+  queryFn: getTotalExpenses,
+  staleTime: 1000 * 60 * 5,
+})
+
+export async function getTotalExpenses() {
+  const res = await api.expenses.total.$get()
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch total expenses')
+  }
+
+  const data = await res.json()
+
+  return data
+}

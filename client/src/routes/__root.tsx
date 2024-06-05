@@ -87,6 +87,7 @@ function Root() {
   return (
     <div className="min-h-screen">
       <Nav />
+      <Separator />
       <Outlet />
       <Toaster />
     </div>
