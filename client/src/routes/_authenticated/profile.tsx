@@ -1,6 +1,4 @@
-import { Button } from '@/components/ui/button'
-import { userQueryOptions } from '@/lib/api'
-import { useQuery } from '@tanstack/react-query'
+import { useRouteContext } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/profile')({
@@ -8,24 +6,11 @@ export const Route = createFileRoute('/_authenticated/profile')({
 })
 
 function Profile() {
-  const { isPending, error, data } = useQuery(userQueryOptions)
-
-  if (isPending) {
-    return <p>Loading...</p>
-  }
-
-  if (error) {
-    return <p>Error: {error.message}</p>
-  }
+  const { user } = useRouteContext({ from: '/_authenticated' })
 
   return (
-    <div>
-      <p>Hello {data.user.email}</p>
-      <Button asChild>
-        <a href="/api/logout" className="text-blue-500">
-          Logout
-        </a>
-      </Button>
+    <div className="px-8">
+      <p>Hello {user ? user.email : 'MISSING_EMAIL'}</p>
     </div>
   )
 }

@@ -5,5 +5,5 @@ export const Route = createFileRoute('/_authenticated/')({
 })
 
 function Index() {
-  return <div>Dashboard will go here, cool graphs and all that jazz</div>
+  return <div className="px-8">Dashboard will go here, cool graphs and all that jazz</div>
 }

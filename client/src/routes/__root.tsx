@@ -5,6 +5,15 @@ import logo from '../../public/spendra-logo.svg'
 import { Switch } from '@/components/ui/switch'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import { Separator } from '@/components/ui/separator'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { CircleUser, LogOut } from 'lucide-react'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -24,12 +33,25 @@ function Nav() {
 
   return (
     <div className="py-2 px-8 flex gap-4 items-center h-14 justify-between">
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-8 items-center">
         <Link to="/">
-          <img src={logo} alt="Logo" className="h-8" style={{ color: '#ff0000' }} />
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-8 hover:opacity-50 transition-opacity duration-200"
+          />
         </Link>
         <div id="pages" className="flex gap-4">
-          <Link to="/expenses" className="active:font-bold">
+          <Link
+            to="/"
+            className="text-zinc-400 hover:text-zinc-300 transition-colors duration-200 [&.active]:text-foreground"
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/expenses"
+            className="text-zinc-400 hover:text-zinc-300 transition-colors duration-200 [&.active]:text-foreground"
+          >
             Expenses
           </Link>
         </div>
@@ -37,9 +59,25 @@ function Nav() {
       <div className="flex gap-4 h-full items-center">
         <Switch checked={!!darkMode} onClick={toggleDarkMode} darkMode={darkMode} />
         <Separator orientation="vertical" className="" />
-        <Link to="/profile" className="active:font-bold">
-          Profile
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="outline-none">
+            <CircleUser className="h-6 w-6 text-zinc-400 hover:text-zinc-300 transition-colors duration-200 [&.active]:text-foreground" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="mr-4 mt-2">
+            <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link to="/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <a href="/api/logout">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </a>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )
