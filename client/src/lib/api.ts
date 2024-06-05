@@ -25,8 +25,8 @@ export const userQueryOptions = queryOptions({
   staleTime: Infinity,
 })
 
-export async function getExpenses() {
-  const res = await api.expenses.$get()
+export async function getExpenses(limit?: number) {
+  const res = await api.expenses.$get({ query: { limit: limit?.toString() } })
 
   if (!res.ok) {
     throw new Error('Failed to fetch expenses')
@@ -39,7 +39,7 @@ export async function getExpenses() {
 
 export const expensesQueryOptions = queryOptions({
   queryKey: ['get-expenses'],
-  queryFn: getExpenses,
+  queryFn: () => getExpenses(),
   staleTime: 1000 * 60 * 5,
 })
 

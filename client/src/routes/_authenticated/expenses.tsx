@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutationState, useQuery } from '@tanstack/react-query'
-import { expensesQueryOptions, getExpenses } from '@/lib/api'
+import { expensesQueryOptions } from '@/lib/api'
 import {
   Table,
   TableBody,
@@ -51,7 +51,7 @@ function Expenses() {
                     .fill(0)
                     .map((_, i) => (
                       <TableCell key={i}>
-                        <Skeleton className="h-4" />
+                        <Skeleton className="h-10" />
                       </TableCell>
                     ))}
                 </TableRow>
