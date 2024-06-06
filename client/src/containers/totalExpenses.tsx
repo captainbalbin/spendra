@@ -10,6 +10,7 @@ export const TotalExpenses = () => {
   if (error) {
     return <div>{error.message}</div>
   }
+
   function formatValueWithSpaces(value: string | null | undefined): string {
     if (!value) {
       return ''

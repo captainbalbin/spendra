@@ -10,15 +10,16 @@ export const expensesRoute = new Hono()
   .use(getUser)
   .get('/', async (context) => {
     const user = context.var.user
-    const { limit } = context.req.query()
+    const { limit, sort } = context.req.query()
 
     const requestLimit = Number(limit) <= 100 ? Number(limit) : 100
+    const requestSort = sort === 'date' ? expenseTable.date : expenseTable.createdAt
 
     const expenses = await db
       .select()
       .from(expenseTable)
       .where(eq(expenseTable.userId, user.id))
-      .orderBy(desc(expenseTable.createdAt))
+      .orderBy(desc(requestSort))
       .limit(requestLimit)
 
     return context.json({ expenses: expenses })

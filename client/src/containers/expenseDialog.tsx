@@ -11,7 +11,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createExpense, expensesQueryOptions, updateExpense } from '@/lib/api'
+import {
+  createExpense,
+  expensesQueryOptions,
+  totalExpensesQueryOptions,
+  updateExpense,
+} from '@/lib/api'
 import { UpdateExpense, createExpenseSchema, updateExpenseSchema } from '@server/sharedTypes'
 import { useForm } from '@tanstack/react-form'
 import { zodValidator } from '@tanstack/zod-form-adapter'
@@ -63,6 +68,7 @@ export const ExpenseDialog = ({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: expensesQueryOptions.queryKey })
+      queryClient.invalidateQueries({ queryKey: totalExpensesQueryOptions.queryKey })
     },
     mutationKey: ['create-expense'],
   })

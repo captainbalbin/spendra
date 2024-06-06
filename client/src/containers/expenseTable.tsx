@@ -19,7 +19,7 @@ export const ExpensesCard = () => {
 
   const { isPending, error, data } = useQuery({
     queryKey: ['get-expenses', requestLimit],
-    queryFn: () => getExpenses(requestLimit),
+    queryFn: () => getExpenses(requestLimit, 'date'),
     staleTime: 1000 * 60 * 5,
   })
 
