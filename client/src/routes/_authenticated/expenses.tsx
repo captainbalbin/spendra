@@ -6,13 +6,14 @@ import { TableOptionsButton } from '@/containers/tableOptions'
 import { DataTable } from '@/containers/dataTable'
 import { ColumnDef } from '@tanstack/react-table'
 import { UpdateExpense } from '@server/sharedTypes'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUp, ArrowDown, ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_authenticated/expenses')({
   component: Expenses,
 })
 
+// TODO: Move this out of this file
 const columns: ColumnDef<UpdateExpense>[] = [
   {
     accessorKey: 'id',
@@ -22,10 +23,19 @@ const columns: ColumnDef<UpdateExpense>[] = [
           Id
           <Button
             variant="ghost"
-            className="p-1 h-6 w-6 ml-1"
+            className={`p-1 h-6 w-6 ml-1`}
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            <ArrowUpDown className="h-4 w-4" />
+            {/* TODO: Do this for all columns that can be sorted. And then move it out of the render so the same can be re-used */}
+            {column.getIsSorted() === 'desc' ? (
+              <ArrowUp
+                className={`h-4 w-4 ${column.getIsSorted() === 'desc' ? 'text-white' : ''}`}
+              />
+            ) : (
+              <ArrowDown
+                className={`h-4 w-4 ${column.getIsSorted() === 'asc' ? 'text-white' : ''}`}
+              />
+            )}
           </Button>
         </div>
       )
