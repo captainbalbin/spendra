@@ -85,6 +85,8 @@ export const ExpenseDialog = ({
 
         queryClient.setQueryData(['get-expenses', newExpense.id], newExpense)
 
+        closeRef.current?.click()
+
         toast('Expense updated')
 
         return { existingExpense, newExpense }
