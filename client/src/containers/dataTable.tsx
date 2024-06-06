@@ -72,7 +72,7 @@ export const DataTable = <TData, TValue>({
               ))}
           </TableRow>
         )}
-        {isLoading || !table.getRowModel().rows.length
+        {isLoading
           ? Array(3)
               .fill(0)
               .map((_, i) => (

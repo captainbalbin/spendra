@@ -3,8 +3,9 @@ import { zValidator } from '@hono/zod-validator'
 import { getUser } from '../kinde'
 import { db } from '../db'
 import { expenses as expenseTable, insertExpensesSchema } from '../db/schema/expenses'
-import { eq, desc, sum, and } from 'drizzle-orm'
+import { eq, desc, sum, and, between } from 'drizzle-orm'
 import { createExpenseSchema, updateExpenseSchema } from '../sharedTypes'
+import { getDateRange } from '../lib/utils'
 
 export const expensesRoute = new Hono()
   .use(getUser)
@@ -44,10 +45,18 @@ export const expensesRoute = new Hono()
   })
   .get('/total', async (context) => {
     const user = context.var.user
+    const interval = context.req.query('interval')
+    const { startDate, endDate } = getDateRange(interval)
+
     const result = await db
       .select({ total: sum(expenseTable.amount) })
       .from(expenseTable)
-      .where(eq(expenseTable.userId, user.id))
+      .where(
+        and(
+          eq(expenseTable.userId, user.id),
+          startDate && endDate ? between(expenseTable.date, startDate, endDate) : undefined
+        )
+      )
       .limit(1)
       .then((res) => res[0])
     return context.json(result)

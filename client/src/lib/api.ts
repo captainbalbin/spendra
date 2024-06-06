@@ -97,12 +97,12 @@ export async function getExpense({ id }: { id: number }): Promise<Expense> {
 
 export const totalExpensesQueryOptions = queryOptions({
   queryKey: ['get-total-expenses'],
-  queryFn: getTotalExpenses,
+  queryFn: () => getTotalExpenses(),
   staleTime: 1000 * 60 * 5,
 })
 
-export async function getTotalExpenses() {
-  const res = await api.expenses.total.$get()
+export async function getTotalExpenses(interval?: 'week' | 'month') {
+  const res = await api.expenses.total.$get({ query: { interval } })
 
   if (!res.ok) {
     throw new Error('Failed to fetch total expenses')
