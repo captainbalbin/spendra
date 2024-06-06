@@ -20,7 +20,7 @@ export const TotalExpenses = () => {
   const formattedTotal = formatValueWithSpaces(data?.total)
 
   return (
-    <Card>
+    <Card className="h-max col-span-1">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-base font-medium">Total Expenses</CardTitle>
         <Currency className="h-4 w-4 text-muted-foreground" />

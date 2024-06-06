@@ -32,7 +32,7 @@ function Nav() {
   }
 
   return (
-    <div className="py-2 px-8 flex gap-4 items-center h-14 justify-between">
+    <div className="py-2 px-8 flex gap-4 items-center h-14 justify-between sticky top-0 bg-background z-10 shadow-lg">
       <div className="flex gap-8 items-center">
         <Link to="/">
           <img
