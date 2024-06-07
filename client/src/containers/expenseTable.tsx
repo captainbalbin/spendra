@@ -28,7 +28,7 @@ export const ExpensesCard = () => {
   }
 
   return (
-    <Card className="col-span-2">
+    <Card className="col-span-1 sm:col-span-2">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>Latest 5</CardTitle>
         <Button asChild size="sm" className="ml-auto gap-1">

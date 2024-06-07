@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_authenticated/')({
 
 function Index() {
   return (
-    <div className="p-8 grid grid-flow-row grid-cols-1 gap-y-8 md:gap-8 md:grid-cols-3">
+    <div className="p-8 grid grid-flow-row grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
       <TotalExpenses title={'Total Expenses'} />
       <TotalExpenses title={'This Week'} interval="week" />
       <TotalExpenses title={'This Month'} interval="month" />
