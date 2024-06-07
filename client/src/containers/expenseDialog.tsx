@@ -17,14 +17,14 @@ import {
   totalExpensesQueryOptions,
   updateExpense,
 } from '@/lib/api'
-import { UpdateExpense, createExpenseSchema, updateExpenseSchema } from '@server/sharedTypes'
+import { UpdateExpense, createExpenseSchema } from '@server/sharedTypes'
 import { useForm } from '@tanstack/react-form'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { Label } from '@/components/ui/label'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { format } from 'date-fns'
-import { Calendar as CalendarIcon, Pencil } from 'lucide-react'
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import dayjs from 'dayjs'
 import { Checkbox } from '@/components/ui/checkbox'
