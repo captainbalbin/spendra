@@ -47,6 +47,10 @@
     --ring: 274 100% 47.8%;
     --radius: 0.5rem;
   }
+  @font-face {
+    font-family: 'Euclid Circular A';
+    src: url('./assets/fonts/Euclid\ Circular\ A\ Regular.ttf') format('ttf');
+  }
 }
 
 @layer base {
