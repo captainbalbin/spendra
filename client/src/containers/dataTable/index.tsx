@@ -44,7 +44,7 @@ export const DataTable = <TData, TValue>({
   })
 
   return (
-    <Table>
+    <Table className="bg-card border-none">
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>

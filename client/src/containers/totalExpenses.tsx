@@ -19,7 +19,7 @@ export const TotalExpenses: React.FC<TotalExpensesProps> = ({ title, interval })
   const formattedTotal = formatValueWithSpaces(data?.total)
 
   return (
-    <Card className="h-max col-span-1">
+    <Card className="h-max col-span-1 border-none">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-base font-medium">{title}</CardTitle>
         <Currency className="h-4 w-4 text-muted-foreground" />

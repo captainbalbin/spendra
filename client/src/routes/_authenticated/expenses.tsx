@@ -25,14 +25,12 @@ function Expenses() {
       <div>
         <ExpenseDialog />
       </div>
-      <div className="border rounded-lg">
-        <DataTable
-          columns={columns}
-          data={data?.expenses ?? []}
-          isLoading={isPending}
-          isLoadingRow={variables?.[0]?.status === 'pending'}
-        />
-      </div>
+      <DataTable
+        columns={columns}
+        data={data?.expenses ?? []}
+        isLoading={isPending}
+        isLoadingRow={variables?.[0]?.status === 'pending'}
+      />
     </div>
   )
 }

@@ -139,12 +139,11 @@ export const ExpenseDialog = ({
             e.stopPropagation()
             void form.handleSubmit()
           }}
-          className="flex flex-col gap-y-4 min-w-80 max-w-xl m-auto"
+          className="flex flex-col gap-y-4 min-w-96 max-w-xl m-auto"
         >
           <form.Field
             name="title"
             validators={{
-              onChange: updateExpenseSchema.shape.title,
               onSubmit: createExpenseSchema.shape.title,
             }}
             children={(field) => (
@@ -160,7 +159,7 @@ export const ExpenseDialog = ({
                 />
 
                 {field.state.meta.touchedErrors ? (
-                  <Label className="text-red-500">{field.state.meta.touchedErrors}</Label>
+                  <Label className="text-destructive">{field.state.meta.touchedErrors}</Label>
                 ) : null}
               </div>
             )}
@@ -184,7 +183,7 @@ export const ExpenseDialog = ({
                   className="w-full hide-ar"
                 />
                 {field.state.meta.touchedErrors ? (
-                  <Label className="text-red-500">{field.state.meta.touchedErrors}</Label>
+                  <Label className="text-destructive">{field.state.meta.touchedErrors}</Label>
                 ) : null}
               </div>
             )}
@@ -253,14 +252,12 @@ export const ExpenseDialog = ({
                   type="button"
                   disabled={isSubmitting}
                   variant={'secondary'}
-                  size={'sm'}
                   onClick={() => closeRef.current?.click()}
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  size={'sm'}
                   disabled={!canSubmit || createMutation.isPending || updateMutation.isPending}
                 >
                   {(createMutation.isPending || updateMutation.isPending) && (

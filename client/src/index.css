@@ -2,51 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+
+#E6CDFF1
+#C0DEDD
+#F1DFDE
+#363636
+#151515
+
+*/
+
 @layer base {
   :root {
-    --background: 274 3% 95%;
-    --foreground: 274 3% 6%;
-    --card: 274 3% 90%;
-    --card-foreground: 274 3% 10%;
-    --popover: 274 3% 95%;
-    --popover-foreground: 274 95% 6%;
-    --primary: 274 100% 47.8%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 274 10% 70%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 236 10% 85%;
-    --muted-foreground: 274 3% 35%;
-    --accent: 236 10% 80%;
-    --accent-foreground: 274 3% 10%;
-    --destructive: 0 50% 30%;
-    --destructive-foreground: 274 3% 90%;
-    --border: 274 20% 50%;
-    --input: 274 20% 18%;
-    --ring: 274 100% 47.8%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 359 70% 59%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
     --radius: 0.5rem;
   }
+
   .dark {
-    --background: 274 10% 6%;
-    --foreground: 274 3% 90%;
-    --card: 274 3% 6%;
-    --card-foreground: 274 3% 90%;
-    --popover: 274 10% 5%;
-    --popover-foreground: 274 3% 90%;
-    --primary: 274 100% 47.8%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 274 10% 10%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 236 10% 15%;
-    --muted-foreground: 274 3% 60%;
-    --accent: 236 10% 15%;
-    --accent-foreground: 274 3% 90%;
-    --destructive: 0 50% 30%;
-    --destructive-foreground: 274 3% 90%;
-    --border: 274 20% 18%;
-    --input: 274 20% 18%;
-    --ring: 274 100% 47.8%;
+    --background: 255 10% 8%;
+    --foreground: 0 0% 98%;
+    --card: 260 9% 13%;
+    --card-foreground: 0 0% 98%;
+    --popover: 252 9% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 125 57% 87%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 296 100% 95%;
+    --secondary-foreground: 255 10% 8%;
+    --tertiary: 0 0% 100%;
+    --tertiary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 359 70% 59%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
     --radius: 0.5rem;
   }
+
   @font-face {
     font-family: 'Euclid Circular A';
     src: url('./assets/fonts/Euclid\ Circular\ A\ Regular.ttf') format('ttf');
