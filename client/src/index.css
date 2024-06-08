@@ -60,10 +60,34 @@
     --ring: 240 4.9% 83.9%;
     --radius: 0.5rem;
   }
+  @font-face {
+    font-family: 'Euclid Circular A';
+    src: url('./assets/fonts/euclid-circular-a-light.ttf') format('truetype');
+    font-weight: 300;
+  }
 
   @font-face {
     font-family: 'Euclid Circular A';
-    src: url('./assets/fonts/Euclid\ Circular\ A\ Regular.ttf') format('ttf');
+    src: url('./assets/fonts/euclid-circular-a-regular.ttf') format('truetype');
+    font-weight: 400;
+  }
+
+  @font-face {
+    font-family: 'Euclid Circular A';
+    src: url('./assets/fonts/euclid-circular-a-medium.ttf') format('truetype');
+    font-weight: 500;
+  }
+
+  @font-face {
+    font-family: 'Euclid Circular A';
+    src: url('./assets/fonts/euclid-circular-a-semibold.ttf') format('truetype');
+    font-weight: 600;
+  }
+
+  @font-face {
+    font-family: 'Euclid Circular A';
+    src: url('./assets/fonts/euclid-circular-a-bold.ttf') format('truetype');
+    font-weight: 700;
   }
 }
 
