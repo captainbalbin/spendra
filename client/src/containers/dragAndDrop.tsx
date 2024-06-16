@@ -1,22 +1,67 @@
 import { useDropzone } from 'react-dropzone'
-import { ReactNode, useCallback } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
+import Papa from 'papaparse'
+
+interface Transaction {
+  date: string
+  title: string
+  description: string
+  amount: string
+}
+
+interface HeaderMap {
+  [key: number]: keyof Transaction | null
+}
 
 export const DragAndDrop = ({ children }: { children: ReactNode }) => {
+  // TODO: Use transactions
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader()
 
-      reader.onabort = () => console.log('file reading was aborted')
-      reader.onerror = () => console.log('file reading has failed')
+      reader.onabort = () => console.error('file reading was aborted')
+      reader.onerror = () => console.error('file reading has failed')
       reader.onload = () => {
-        // Do whatever you want with the file contents
-        const binaryStr = reader.result
-        console.log(binaryStr)
-      }
-      reader.readAsArrayBuffer(file)
-    })
+        Papa.parse<Transaction>(reader.result as string, {
+          skipEmptyLines: true,
+          header: true,
+          transformHeader: (_: string, index: number): string => {
+            const headerMap: HeaderMap = {
+              5: 'date',
+              8: 'title',
+              9: 'description',
+              10: 'amount',
+            }
 
-    console.log('acceptedFiles', acceptedFiles)
+            return headerMap[index] || ''
+          },
+          beforeFirstChunk: function (chunk: string) {
+            const rows = chunk.split(/\r\n|\r|\n/)
+            return rows.slice(1).join('\n')
+          },
+          complete: (result: Papa.ParseResult<Transaction>) => {
+            const data = result.data.map((transaction: Transaction) => {
+              if (transaction.amount) {
+                const amountNumber = parseFloat(transaction.amount)
+                if (amountNumber < 0) {
+                  transaction.amount = Math.abs(amountNumber).toString()
+                }
+              }
+
+              return Object.fromEntries(
+                Object.entries(transaction).filter(([key, _]) => key)
+              ) as Transaction
+            })
+
+            setTransactions(data)
+          },
+        })
+      }
+
+      reader.readAsText(file, 'UTF-8')
+    })
   }, [])
 
   const { getRootProps, getInputProps, isDragActive, fileRejections, acceptedFiles } = useDropzone({
