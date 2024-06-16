@@ -9,6 +9,8 @@ export const createExpenseSchema = insertExpensesSchema.omit({
 
 export type CreateExpense = z.infer<typeof createExpenseSchema>
 
+export const createMultipleExpensesSchema = z.array(createExpenseSchema)
+
 export const updateExpenseSchema = insertExpensesSchema.omit({
   userId: true,
   createdAt: true,

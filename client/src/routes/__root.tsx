@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { CircleUser, LogOut } from 'lucide-react'
 import { ExpenseDialog } from '@/containers/expenseDialog'
+import { DragAndDrop } from '@/containers/dragAndDrop'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -93,7 +94,9 @@ function Root() {
   return (
     <div className="min-h-screen">
       <Nav />
-      <Outlet />
+      <DragAndDrop>
+        <Outlet />
+      </DragAndDrop>
       <Toaster />
     </div>
   )

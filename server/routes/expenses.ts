@@ -4,7 +4,11 @@ import { getUser } from '../kinde'
 import { db } from '../db'
 import { expenses as expenseTable, insertExpensesSchema } from '../db/schema/expenses'
 import { eq, desc, sum, and, between } from 'drizzle-orm'
-import { createExpenseSchema, updateExpenseSchema } from '../sharedTypes'
+import {
+  createExpenseSchema,
+  createMultipleExpensesSchema,
+  updateExpenseSchema,
+} from '../sharedTypes'
 import { getDateRange } from '../lib/utils'
 
 export const expensesRoute = new Hono()
@@ -42,6 +46,26 @@ export const expensesRoute = new Hono()
 
     context.status(201)
     return context.json(result)
+  })
+  .post('/multiple', zValidator('json', createMultipleExpensesSchema), async (context) => {
+    const expenseArray = context.req.valid('json')
+    const user = context.var.user
+
+    const validatedExpenses = expenseArray.map((expense) =>
+      insertExpensesSchema.parse({
+        ...expense,
+        userId: user.id,
+      })
+    )
+
+    const results = await db
+      .insert(expenseTable)
+      .values(validatedExpenses)
+      .returning()
+      .then((res) => res)
+
+    context.status(201)
+    return context.json(results)
   })
   .get('/total', async (context) => {
     const user = context.var.user

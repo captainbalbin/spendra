@@ -1,8 +1,9 @@
 import { useDropzone } from 'react-dropzone'
 import { ReactNode, useCallback, useState } from 'react'
 import Papa from 'papaparse'
+import { StagingDialog } from './stagingDialog'
 
-interface Transaction {
+export interface Transaction {
   date: string
   title: string
   description: string
@@ -105,6 +106,7 @@ export const DragAndDrop = ({ children }: { children: ReactNode }) => {
       )}
       {acceptedFileItems}
       {fileRejectionItems}
+      <StagingDialog transactions={transactions} />
     </div>
   )
 }

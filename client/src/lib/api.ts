@@ -57,6 +57,18 @@ export async function createExpense({ value }: { value: CreateExpense }) {
   return newExpense
 }
 
+export async function createMultipleExpenses({ value }: { value: CreateExpense[] }) {
+  const res = await api.expenses.multiple.$post({ json: value })
+
+  if (!res.ok) {
+    throw new Error('Failed to create expense')
+  }
+
+  const newExpense = await res.json()
+
+  return newExpense
+}
+
 export const deleteExpense = async ({ id }: { id: number }) => {
   const res = await api.expenses[':id{[0-9]+}'].$delete({ param: { id: id.toString() } })
 
