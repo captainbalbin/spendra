@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { CircleUser, LogOut } from 'lucide-react'
+import { ExpenseDialog } from '@/containers/expenseDialog'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -42,7 +43,7 @@ function Nav() {
               className="h-8 hover:opacity-50 transition-opacity duration-200"
             />
           </Link>
-          <div id="pages" className="flex gap-4">
+          <div id="pages" className="flex gap-4 items-center">
             <Link
               to="/"
               className="text-zinc-400 hover:text-zinc-300 transition-colors duration-200 [&.active]:text-foreground"
@@ -58,8 +59,10 @@ function Nav() {
           </div>
         </div>
         <div className="flex gap-4 h-full items-center">
+          <ExpenseDialog />
+          <Separator orientation="vertical" />
           <Switch checked={!!darkMode} onClick={toggleDarkMode} darkMode={darkMode} />
-          <Separator orientation="vertical" className="" />
+          <Separator orientation="vertical" />
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">
               <CircleUser className="h-6 w-6 text-zinc-400 hover:text-zinc-300 transition-colors duration-200 [&.active]:text-foreground" />

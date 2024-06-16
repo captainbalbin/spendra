@@ -31,15 +31,18 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { DragAndDrop } from './dragAndDrop'
+import { Plus } from 'lucide-react'
 
 export const ExpenseDialog = ({
   open,
   onOpen,
   expense,
+  variant,
 }: {
   open?: boolean
   onOpen?: (open: boolean) => void
   expense?: UpdateExpense
+  variant?: 'default' | 'secondary'
 }) => {
   const [multiple, setMultiple] = useState(false)
   const closeRef = useRef<HTMLButtonElement | null>(null)
@@ -123,7 +126,9 @@ export const ExpenseDialog = ({
     <Dialog open={open} onOpenChange={onOpen}>
       {!expense && (
         <DialogTrigger asChild>
-          <Button>New Expense</Button>
+          <Button variant={variant}>
+            <Plus className="mr-2 h-4 w-4" /> Expense
+          </Button>
         </DialogTrigger>
       )}
       <DialogContent

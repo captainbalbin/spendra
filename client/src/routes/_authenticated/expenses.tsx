@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMutationState, useQuery } from '@tanstack/react-query'
 import { expensesQueryOptions } from '@/lib/api'
-import { ExpenseDialog } from '@/containers/expenseDialog'
 import { DataTable } from '@/containers/dataTable'
 import { columns } from '@/containers/dataTable/utils'
 import { Input } from '@/components/ui/input'
@@ -33,7 +32,6 @@ function Expenses() {
           onChange={(event) => setFilterValue(event.target.value)}
           className="max-w-sm"
         />
-        <ExpenseDialog />
       </div>
       <DataTable
         columns={columns}
