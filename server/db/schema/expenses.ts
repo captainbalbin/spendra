@@ -23,7 +23,7 @@ export const insertExpensesSchema = createInsertSchema(expenses, {
   title: z.string().min(3),
   amount: z
     .string()
-    .regex(/^\d+(\.\d{2})?$/)
+    .regex(/^\d+(\.\d{1,2})?$/)
     .refine((value) => parseFloat(value) >= 0.01, 'Amount must be greater than or equal to 0.01'),
 })
 

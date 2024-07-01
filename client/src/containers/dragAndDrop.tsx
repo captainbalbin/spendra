@@ -2,6 +2,7 @@ import { useDropzone } from 'react-dropzone'
 import { ReactNode, useCallback, useState } from 'react'
 import Papa from 'papaparse'
 import { StagingDialog } from './stagingDialog'
+import { toast } from 'sonner'
 
 export interface Transaction {
   date: string
@@ -15,7 +16,6 @@ interface HeaderMap {
 }
 
 export const DragAndDrop = ({ children }: { children: ReactNode }) => {
-  // TODO: Use transactions
   const [transactions, setTransactions] = useState<Transaction[]>([])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -65,7 +65,7 @@ export const DragAndDrop = ({ children }: { children: ReactNode }) => {
     })
   }, [])
 
-  const { getRootProps, getInputProps, isDragActive, fileRejections, acceptedFiles } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
     onDrop,
     noClick: true,
     multiple: false,
@@ -75,23 +75,17 @@ export const DragAndDrop = ({ children }: { children: ReactNode }) => {
     accept: { 'text/csv': ['.csv'] },
   })
 
-  const acceptedFileItems = acceptedFiles.map((file) => (
-    <p key={file.name}>
-      {file.name} - {file.size} bytes
-    </p>
-  ))
+  if (fileRejections.length > 0) {
+    fileRejections.forEach((file) => {
+      toast.error(file.errors[0].message)
+    })
+  }
 
-  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-    <div key={file.name}>
-      {errors.map((e) => {
-        return (
-          <p className="text-destructive" key={e.code}>
-            {e.message}
-          </p>
-        )
-      })}
-    </div>
-  ))
+  const handleComplete = (complete: boolean) => {
+    if (complete) {
+      setTransactions([])
+    }
+  }
 
   return (
     <div {...getRootProps()}>
@@ -104,9 +98,11 @@ export const DragAndDrop = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
       )}
-      {acceptedFileItems}
-      {fileRejectionItems}
-      <StagingDialog transactions={transactions} />
+
+      <StagingDialog
+        transactions={transactions}
+        onComplete={(complete) => handleComplete(complete)}
+      />
     </div>
   )
 }

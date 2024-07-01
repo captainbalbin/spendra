@@ -10,9 +10,16 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createMultipleExpenses, expensesQueryOptions, totalExpensesQueryOptions } from '@/lib/api'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 
-export const StagingDialog = ({ transactions }: { transactions: Transaction[] }) => {
-  const [open, setOpen] = useState(true)
+export const StagingDialog = ({
+  transactions,
+  onComplete,
+}: {
+  transactions: Transaction[]
+  onComplete: (isComplete: boolean) => void
+}) => {
+  const [open, setOpen] = useState(transactions.length > 0)
 
   useEffect(() => {
     if (transactions.length > 0) {
@@ -36,17 +43,35 @@ export const StagingDialog = ({ transactions }: { transactions: Transaction[] })
         toast('Expenses created', {
           description: `Added: ${newExpenses.length} expenses`,
         })
+        onComplete(true)
       } catch (error) {
         toast.error('Failed to create new expenses')
         console.error(error)
+        onComplete(true)
       }
+    },
+    onError: (error) => {
+      toast.error('Failed to create new expenses')
+      console.error(error)
+      onComplete(true)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: expensesQueryOptions.queryKey })
       queryClient.invalidateQueries({ queryKey: totalExpensesQueryOptions.queryKey })
     },
-    mutationKey: ['create-expense'],
+    mutationKey: ['create-multiple-expenses'],
   })
+
+  const handleAdd = () => {
+    if (transactions.length > 0) {
+      createMutation.mutate({ value: transactions })
+    }
+  }
+
+  const handleCancel = () => {
+    setOpen(false)
+    onComplete(true)
+  }
 
   return (
     <Dialog open={open}>
@@ -64,7 +89,10 @@ export const StagingDialog = ({ transactions }: { transactions: Transaction[] })
         </div>
         <DialogClose />
         <DialogFooter>
-          <button onClick={() => setOpen(false)}>Close</button>
+          <Button onClick={handleCancel} variant={'secondary'}>
+            Cancel
+          </Button>
+          <Button onClick={handleAdd}>Confirm</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

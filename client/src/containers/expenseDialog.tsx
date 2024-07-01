@@ -30,7 +30,6 @@ import dayjs from 'dayjs'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
-import { DragAndDrop } from './dragAndDrop'
 import { Plus } from 'lucide-react'
 
 export const ExpenseDialog = ({
